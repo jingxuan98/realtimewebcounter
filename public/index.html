@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TIPS Web Dev</title>
+        <link rel="stylesheet" type="text/css" href="index.css" >
+        <meta charset="UTF-8">
+        <meta name="viewport" content="initial-scale=1.0, width=device-width">
+        <script src="https://kit.fontawesome.com/38e39646bb.js" crossorigin="anonymous"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.17.2/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.17.2/firebase-database.js"></script>
+    </head>
+
+    <body>
+        <div class="container">
+
+            <div class="nav-bar">
+                <nav>
+                    <span href=""><i class="fas fa-eye"></i></span>
+                    <span id ="count_text" href= "">0</span>
+                    <span>people is reading this site now</span>
+                    </nav>  
+            </div>
+        </div>
+
+        <div class="info">
+            <div class="content">
+                <img class="info-image" src="info.jpg"/>
+            
+                <div class="history">
+                    <h3 style="margin-bottom: 30px;" id="headline">I am NJ, I help people to build stunning websites !</h3>
+                </div>
+              
+                <div class="contact">
+                    <a href="" class="messenger-button"><i class="fab fa-facebook-messenger"></i> Contact me via Messenger</a>
+                    <a href="" class="whatsapp-button"><i class="fab fa-whatsapp"></i> Contact me via Whatsapp</a>
+                </div>
+                  
+              </div>
+
+               
+            </div>
+    </body>
+    <script type="application/javascript">
+        // Your web app's Firebase configuration
+        var firebaseConfig = {
+          apiKey: "AIzaSyDTOVKN8r6WHS0A7ldTMwFa0eHO13IuP2c",
+          authDomain: "tips-web-dev.firebaseapp.com",
+          databaseURL: "https://tips-web-dev.firebaseio.com",
+          projectId: "tips-web-dev",
+          storageBucket: "tips-web-dev.appspot.com",
+          messagingSenderId: "470920163844",
+          appId: "1:470920163844:web:a4269bfa4f9f902c3cfb51"
+        };
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+
+        function get_viewers_ip(json){
+            viewers_ip = json.ip;
+            count_view(viewers_ip);
+        }
+
+        function count_view(viewers_ip){
+          var views;
+          var ip_to_string = viewers_ip.toString();
+
+          for(var i=0; i<ip_to_string.length;i++){
+            ip_to_string = ip_to_string.replace(".","-")
+          }
+          
+          firebase.database().ref().child("page_views/" + ip_to_string).set({
+            viewers_ip : viewers_ip
+          });
+
+          firebase.database().ref().child("page_views").on("value", function(snapshot){
+            views = snapshot.numChildren();
+            console.log(views);
+            document.getElementById("count_text").innerHTML = views;
+          });
+        }
+
+      </script>
+
+      <script type="application/javascript" src="https://api.ipify.org?format=jsonp&callback=get_viewers_ip"></script>
+</html>
